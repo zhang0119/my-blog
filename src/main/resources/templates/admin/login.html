@@ -40,6 +40,7 @@
         <div class="card-body login-card-body">
             <p class="login-box-msg">your personal blog , enjoy it</p>
             <form th:action="@{/admin/login}" method="post">
+                <!--如果session里面存储的errorMsg不为空，则显示错误信息，否则就不显示-->
                 <div th:if="${not #strings.isEmpty(session.errorMsg)}" class="form-group">
                     <div class="alert alert-danger" th:text="${session.errorMsg}"></div>
                 </div>

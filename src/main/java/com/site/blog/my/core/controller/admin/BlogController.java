@@ -65,6 +65,7 @@ public class BlogController {
         return "admin/edit";
     }
 
+    /*这个方法就是处理修改博客的作用*/
     @GetMapping("/blogs/edit/{blogId}")
     public String edit(HttpServletRequest request, @PathVariable("blogId") Long blogId) {
         request.setAttribute("path", "edit");

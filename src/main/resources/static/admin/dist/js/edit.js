@@ -58,6 +58,7 @@ $(function () {
         }
     });
 
+    /*上传封面按钮的js*/
     new AjaxUpload('#uploadCoverImage', {
         action: '/admin/upload/file',
         name: 'file',
@@ -81,6 +82,7 @@ $(function () {
     });
 });
 
+/*保存文章按钮的js*/
 $('#confirmButton').click(function () {
     var blogTitle = $('#blogName').val();
     var blogSubUrl = $('#blogSubUrl').val();
@@ -138,6 +140,7 @@ $('#confirmButton').click(function () {
     $('#articleModal').modal('show');
 });
 
+/*模态框里面的确认按钮的js*/
 $('#saveButton').click(function () {
     var blogId = $('#blogId').val();
     var blogTitle = $('#blogName').val();
@@ -177,12 +180,15 @@ $('#saveButton').click(function () {
         };
     }
     console.log(data);
+
     $.ajax({
         type: 'POST',//方法类型
         url: url,
         data: data,
         success: function (result) {
             if (result.resultCode == 200) {
+                //成功
+                /*articleModal是模态框的id*/
                 $('#articleModal').modal('hide');
                 swal({
                     title: swlMessage,
@@ -197,6 +203,7 @@ $('#saveButton').click(function () {
                 })
             }
             else {
+                //失败
                 $('#articleModal').modal('hide');
                 swal(result.message, {
                     icon: "error",
@@ -212,6 +219,7 @@ $('#saveButton').click(function () {
     });
 });
 
+/*返回文章列表的js*/
 $('#cancelButton').click(function () {
     window.location.href = "/admin/blogs";
 });
@@ -220,6 +228,7 @@ $('#cancelButton').click(function () {
  * 随机封面功能
  */
 $('#randomCoverImage').click(function () {
+    /*Math.random()这个函数会随机返回0和1之间*/
     var rand = parseInt(Math.random() * 40 + 1);
     $("#blogCoverImage").attr("src", '/admin/dist/img/rand/' + rand + ".jpg");
     $("#blogCoverImage").attr("style", "width:160px ;height: 120px;display:block;");

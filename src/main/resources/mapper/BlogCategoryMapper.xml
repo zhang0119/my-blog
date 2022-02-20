@@ -18,6 +18,7 @@
         from tb_blog_category
         where is_deleted=0
         order by category_rank desc,create_time desc
+        /*下面是分页处理*/
         <if test="start!=null and limit!=null">
             limit #{start},#{limit}
         </if>

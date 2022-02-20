@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<!--引入公共代码-->
 <header th:replace="admin/header::header-fragment"></header>
+
 <body class="hold-transition sidebar-mini">
+
 <div class="wrapper">
     <!-- 引入页面头header-fragment -->
     <div th:replace="admin/header::header-nav"></div>
+
     <!-- 引入工具栏sidebar-fragment -->
     <div th:replace="admin/sidebar::sidebar-fragment(${path})"></div>
+
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -14,12 +19,15 @@
             <div class="container-fluid">
             </div><!-- /.container-fluid -->
         </div>
-        <!-- Main content -->
+
+        <!-- Main content 中间内容，只有这部分模块都不相同-->
         <div class="content">
             <div class="container-fluid">
                 <div class="card-header">
                     <h3 class="card-title">管理首页</h3>
                 </div> <!-- /.card-body -->
+
+                <!--首页的六大模块-->
                 <div class="row" style="margin-top: 40px;border-top:0px;">
                     <div class="col-lg-4 col-6">
                         <!-- small box -->
@@ -123,8 +131,11 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
+
     <!-- 引入页脚footer-fragment -->
     <div th:replace="admin/footer::footer-fragment"></div>
+
+
 </div>
 <!-- jQuery -->
 <script th:src="@{/admin/plugins/jquery/jquery.min.js}"></script>

@@ -50,6 +50,7 @@ public class AdminController {
         return "admin/index";
     }
 
+    /*这个方法是处理登录表单发送过来的请求*/
     @PostMapping(value = "/login")
     public String login(@RequestParam("userName") String userName,
                         @RequestParam("password") String password,
@@ -63,11 +64,14 @@ public class AdminController {
             session.setAttribute("errorMsg", "用户名或密码不能为空");
             return "admin/login";
         }
-        String kaptchaCode = session.getAttribute("verifyCode") + "";
+        /*这里的kaptchaCode是服务器中取出来的，verifyCode是用户从前端传递过来的*/
+        String kaptchaCode = session.getAttribute("verifyCode")+"";
         if (StringUtils.isEmpty(kaptchaCode) || !verifyCode.equals(kaptchaCode)) {
             session.setAttribute("errorMsg", "验证码错误");
             return "admin/login";
         }
+
+        /*--------------------------------------------------------------------------*/
         AdminUser adminUser = adminUserService.login(userName, password);
         if (adminUser != null) {
             session.setAttribute("loginUser", adminUser.getNickName());

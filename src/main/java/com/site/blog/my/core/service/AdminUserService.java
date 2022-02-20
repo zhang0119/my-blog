@@ -4,6 +4,12 @@ import com.site.blog.my.core.entity.AdminUser;
 
 public interface AdminUserService {
 
+    /**
+     * 登录检查
+     * @param userName
+     * @param password
+     * @return
+     */
     AdminUser login(String userName, String password);
 
     /**

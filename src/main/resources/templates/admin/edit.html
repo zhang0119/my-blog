@@ -8,8 +8,10 @@
 <div class="wrapper">
     <!-- 引入页面头header-fragment -->
     <div th:replace="admin/header::header-nav"></div>
+
     <!-- 引入工具栏sidebar-fragment -->
     <div th:replace="admin/sidebar::sidebar-fragment(${path})"></div>
+
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -27,8 +29,11 @@
                     <div class="card-body">
                         <!-- 几个基础的输入框，名称、分类等输入框 -->
                         <form id="blogForm" onsubmit="return false;">
+
                             <div class="form-group" style="display:flex;">
+                                <!--这个隐藏域作用?-->
                                 <input type="hidden" id="blogId" name="blogId" th:value="${blog!=null and blog.blogId!=null }?${blog.blogId}: 0">
+
                                 <input type="text" class="form-control col-sm-6" id="blogName" name="blogName"
                                        placeholder="*请输入文章标题(必填)"
                                        th:value="${blog!=null and blog.blogTitle!=null }?${blog.blogTitle}: ''"
@@ -39,16 +44,20 @@
                                        th:value="${blog!=null and blog.blogTags!=null }?${blog.blogTags}: ''"
                                        style="width: 100%;">
                             </div>
+
                             <div class="form-group" style="display:flex;">
                                 <input type="text" class="form-control col-sm-6" id="blogSubUrl"
                                        name="blogSubUrl"
                                        th:value="${blog!=null and blog.blogSubUrl!=null }?${blog.blogSubUrl}: ''"
                                        placeholder="请输入自定义路径,如:springboot-mybatis,默认为id"> &nbsp;&nbsp;
+                                <!--下拉列表-->
                                 <select class="form-control select2" style="width: 100%;" id="blogCategoryId"
                                         data-placeholder="请选择分类...">
+                                    <!--如果categories为空，就不显示下拉列表中的值-->
                                     <th:block th:if="${null == categories}">
                                         <option value="0" selected="selected">默认分类</option>
                                     </th:block>
+                                    <!--取反，即categories有值-->
                                     <th:block th:unless="${null == categories}">
                                         <th:block th:each="c : ${categories}">
                                             <option th:value="${c.categoryId}" th:text="${c.categoryName}"
@@ -58,11 +67,16 @@
                                         </th:block>
                                     </th:block>
                                 </select>
+
                             </div>
+
+                            <!--markdown-->
                             <div class="form-group" id="blog-editormd">
                                 <textarea style="display:none;"
                                           th:utext="${blog!=null and blog.blogContent !=null}?${blog.blogContent}: ''"></textarea>
                             </div>
+
+                            <!--markdown下方右侧两个按钮-->
                             <div class="form-group">
                                 <!-- 按钮 -->
                                 &nbsp;<button class="btn btn-info float-right" style="margin-left: 5px;"
@@ -74,7 +88,6 @@
                             </div>
                         </form>
                     </div>
-
                 </div>
             </div><!-- /.container-fluid -->
         </div>
