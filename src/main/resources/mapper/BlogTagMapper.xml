@@ -47,6 +47,7 @@
         where tag_id = #{tagId,jdbcType=INTEGER} AND is_deleted = 0
     </select>
 
+    <!--通过标签名来获取一个标签对象-->
     <select id="selectByTagName" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -67,6 +68,8 @@
         </foreach>
     </update>
 
+    <!--批量插入新加入的博客标签，这里我们将useGeneratedKeys设置为true,就可以返回数据库中的主键值，
+        并将这个tag_id赋值给tag实例中的tagId-->
     <insert id="batchInsertBlogTag" parameterType="java.util.List" useGeneratedKeys="true"
             keyProperty="tagId">
         INSERT into tb_blog_tag(tag_name)

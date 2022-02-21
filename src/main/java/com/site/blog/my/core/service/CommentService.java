@@ -42,9 +42,9 @@ public interface CommentService {
     /**
      * 添加回复
      *
-     * @param commentId
-     * @param replyBody
-     * @return
+     * @param commentId 管理员选中访客的评论的id
+     * @param replyBody 管理员给访客写的评论
+     * @return true表示执行成功<br/>false表示执行失败
      */
     Boolean reply(Long commentId, String replyBody);
 

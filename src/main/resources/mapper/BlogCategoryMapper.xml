@@ -114,6 +114,8 @@
             </if>
         </trim>
     </insert>
+
+    <!--通过主键可选择性的更新博客-->
     <update id="updateByPrimaryKeySelective" parameterType="com.site.blog.my.core.entity.BlogCategory">
         update tb_blog_category
         <set>
@@ -135,6 +137,8 @@
         </set>
         where category_id = #{categoryId,jdbcType=INTEGER}
     </update>
+
+    <!--通过主键更新博客(没有选择性的)-->
     <update id="updateByPrimaryKey" parameterType="com.site.blog.my.core.entity.BlogCategory">
     update tb_blog_category
     set category_name = #{categoryName,jdbcType=VARCHAR},

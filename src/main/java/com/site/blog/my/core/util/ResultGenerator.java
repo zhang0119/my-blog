@@ -11,9 +11,13 @@ import org.springframework.util.StringUtils;
  * @link http://13blog.site
  */
 public class ResultGenerator {
+    /*成功信息*/
     private static final String DEFAULT_SUCCESS_MESSAGE = "SUCCESS";
+    /*失败信息*/
     private static final String DEFAULT_FAIL_MESSAGE = "FAIL";
+    /*成功*/
     private static final int RESULT_CODE_SUCCESS = 200;
+    /*服务器错误*/
     private static final int RESULT_CODE_SERVER_ERROR = 500;
 
     public static Result genSuccessResult() {
@@ -25,6 +29,9 @@ public class ResultGenerator {
 
     public static Result genSuccessResult(String message) {
         Result result = new Result();
+        /*RESULT_CODE_SUCCESS:200
+        * message:添加成功
+        * */
         result.setResultCode(RESULT_CODE_SUCCESS);
         result.setMessage(message);
         return result;
@@ -38,6 +45,7 @@ public class ResultGenerator {
         return result;
     }
 
+    /*生成失败的信息*/
     public static Result genFailResult(String message) {
         Result result = new Result();
         result.setResultCode(RESULT_CODE_SERVER_ERROR);

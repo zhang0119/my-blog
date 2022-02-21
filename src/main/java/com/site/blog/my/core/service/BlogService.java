@@ -13,6 +13,7 @@ public interface BlogService {
 
     PageResult getBlogsPage(PageQueryUtil pageUtil);
 
+    /*根据id批量删除所选blog*/
     Boolean deleteBatch(Integer[] ids);
 
     int getTotalBlogs();

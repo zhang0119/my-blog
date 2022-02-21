@@ -46,16 +46,25 @@
             AND comment_status = #{commentStatus}
         </if>
     </select>
+
+    <!--通过主键查询博客评论的全部信息，单体-->
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from tb_blog_comment
         where comment_id = #{commentId,jdbcType=BIGINT} and is_deleted=0
     </select>
+
     <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
     update tb_blog_comment set is_deleted=1
     where comment_id = #{commentId,jdbcType=BIGINT} and is_deleted=0
   </update>
+
+    <!--检查评论是否审核通过
+        这里的sql表达的逻辑是：
+        将ids里面的评论(并且还要是comment_status=0)的
+        comment_status全部设置为1，这样就表示为审核成功
+    -->
     <update id="checkDone">
         update tb_blog_comment
         set comment_status=1 where comment_id in
@@ -64,6 +73,7 @@
         </foreach>
         and comment_status = 0
     </update>
+
     <update id="deleteBatch">
         update tb_blog_comment
         set is_deleted=1 where comment_id in

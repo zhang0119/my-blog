@@ -43,8 +43,9 @@ $(function () {
         /*string:定义翻页用到的导航栏，必须是有效的html元素，翻页工具栏可以放置在html页面任意位置*/
         pager: "#jqGridPager",
         /*array:描述json数据格式的数组*/
+        /*下面的value都是从后端返回过来的key*/
         jsonReader: {
-            root: "data.list",
+            root: "data.list",  /*存放查询出来的全部博客信息(除了blog_content)*/
             page: "data.currPage",  /*当前页*/
             total: "data.totalPage",  /*总页数*/
             records: "data.totalCount" /*查询出的记录数*/
@@ -99,8 +100,10 @@ function search() {
     //传入查询条件参数
     $("#jqGrid").jqGrid("setGridParam", {postData: searchData});
     //点击搜索按钮默认都从第一页开始
+    /*setGridParam（{page:newvalue}）：设置翻到第几页*/
     $("#jqGrid").jqGrid("setGridParam", {page: 1});
     //提交post并刷新表格
+    /*setGridParam（{url:newvalue}）：可以设置一个grid的ajax url，可共同trigger（"reloadGrid"）应用*/
     $("#jqGrid").jqGrid("setGridParam", {url: '/admin/blogs/list'}).trigger("reloadGrid");
 }
 
@@ -127,6 +130,7 @@ function editBlog() {
 }
 
 function deleteBlog() {
+    /*这里调用public.js里面可以选中多条记录的js代码*/
     var ids = getSelectedRows();
     if (ids == null) {
         return;
@@ -143,12 +147,13 @@ function deleteBlog() {
                     type: "POST",
                     url: "/admin/blogs/delete",
                     contentType: "application/json",
-                    data: JSON.stringify(ids),
+                    data: JSON.stringify(ids), //表格数据序列化,将其变成json格式 {name: value}
                     success: function (r) {
                         if (r.resultCode == 200) {
                             swal("删除成功", {
                                 icon: "success",
                             });
+                            //刷新表格
                             $("#jqGrid").trigger("reloadGrid");
                         } else {
                             swal(r.message, {

@@ -35,6 +35,8 @@
         from tb_blog
         where blog_id = #{blogId,jdbcType=BIGINT} and is_deleted = 0
     </select>
+
+    <!--根据条件查询，这里的查询是不带上blog_content的查询，还有limit=10,page=1,start=0 -->
     <select id="findBlogList" parameterType="Map" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -114,6 +116,8 @@
     UPDATE tb_blog SET is_deleted = 1
     where blog_id = #{blogId,jdbcType=BIGINT} and is_deleted = 0
   </update>
+
+    <!--批量删除博客操作-->
     <update id="deleteBatch">
         update tb_blog
         set is_deleted=1 where blog_id in
@@ -121,6 +125,7 @@
             #{id}
         </foreach>
     </update>
+
     <insert id="insert" parameterType="com.site.blog.my.core.entity.Blog">
     insert into tb_blog (blog_id, blog_title, blog_sub_url, 
       blog_cover_image, blog_category_id, blog_category_name, 
@@ -133,6 +138,7 @@
       #{enableComment,jdbcType=TINYINT}, #{isDeleted,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{blogContent,jdbcType=LONGVARCHAR})
   </insert>
+    <!--保存博客的sql语句-->
     <insert id="insertSelective" useGeneratedKeys="true" keyProperty="blogId"
             parameterType="com.site.blog.my.core.entity.Blog">
         insert into tb_blog
@@ -225,6 +231,7 @@
             </if>
         </trim>
     </insert>
+
     <update id="updateByPrimaryKeySelective" parameterType="com.site.blog.my.core.entity.Blog">
         update tb_blog
         <set>

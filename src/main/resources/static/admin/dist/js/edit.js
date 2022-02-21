@@ -1,5 +1,6 @@
 var blogEditor;
 // Tags Input
+/*这行代码定义了文章标签栏的格式和默认文本值*/
 $('#blogTags').tagsInput({
     width: '100%',
     height: '38px',
@@ -7,29 +8,38 @@ $('#blogTags').tagsInput({
 });
 
 //Initialize Select2 Elements
+/*这个代码主要是与select2插件有关的*/
 $('.select2').select2()
 
+/*$(function(){}) 是在DOM加载完成后执行的回调函数，并且只会执行一次*/
 $(function () {
+    /*editormd的初始化,下面的*/
+    /*这里的blog-editormd就是上面div的id属性值*/
     blogEditor = editormd("blog-editormd", {
         width: "100%",
         height: 640,
         syncScrolling: "single",
+        /*你的路径*/
         path: "/admin/plugins/editormd/lib/",
         toolbarModes: 'full',
         /**图片上传配置*/
         imageUpload: true,
-        imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"], //图片上传格式
+        /*图片上传的格式*/
+        imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+        /*你的controller里为上传图片所设计的路径*/
         imageUploadURL: "/admin/blogs/md/uploadfile",
         onload: function (obj) { //上传成功之后的回调
         }
     });
 
-    // 编辑器粘贴上传
+    // 编辑器粘贴上传(下面的代码都是固定格式，直接复制粘贴使用即可!)
+    /*开启图片上传并且实现拖拽剪切复制粘贴上传图片*/
     document.getElementById("blog-editormd").addEventListener("paste", function (e) {
         var clipboardData = e.clipboardData;
         if (clipboardData) {
             var items = clipboardData.items;
             if (items && items.length > 0) {
+                /*搜索剪切板items*/
                 for (var item of items) {
                     if (item.type.startsWith("image/")) {
                         var file = item.getAsFile();
@@ -58,18 +68,26 @@ $(function () {
         }
     });
 
-    /*上传封面按钮的js*/
+    /*上传封面按钮的js, 这个按钮的id:uploadCoverImage
+    * 这里的文件上传使用的是ajax来实现的
+    * */
     new AjaxUpload('#uploadCoverImage', {
+        /*服务器上传脚本的位置*/
         action: '/admin/upload/file',
+        /*上传文件的名字*/
         name: 'file',
+        /*选择文件后立即提交*/
         autoSubmit: true,
+        /*期望从服务器返回的数据类型*/
         responseType: "json",
+        /*在文件上传之前回调，你可以返回false取消上传*/
         onSubmit: function (file, extension) {
             if (!(extension && /^(jpg|jpeg|png|gif)$/.test(extension.toLowerCase()))) {
                 alert('只支持jpg、png、gif格式的文件！');
                 return false;
             }
         },
+        /*当文件上传完成后触发，不要使用false字符串作为相应*/
         onComplete: function (file, r) {
             if (r != null && r.resultCode == 200) {
                 $("#blogCoverImage").attr("src", r.data);
@@ -82,7 +100,7 @@ $(function () {
     });
 });
 
-/*保存文章按钮的js*/
+/*保存文章按钮的js，已看完*/
 $('#confirmButton').click(function () {
     var blogTitle = $('#blogName').val();
     var blogSubUrl = $('#blogSubUrl').val();
@@ -157,6 +175,7 @@ $('#saveButton').click(function () {
         });
         return;
     }
+    /*定义了请求的url*/
     var url = '/admin/blogs/save';
     var swlMessage = '保存成功';
     var data = {
@@ -164,6 +183,9 @@ $('#saveButton').click(function () {
         "blogTags": blogTags, "blogContent": blogContent, "blogCoverImage": blogCoverImage, "blogStatus": blogStatus,
         "enableComment": enableComment
     };
+    /*这个地方做了一个判断，即如果有blogId，则表明这是一个修改博客操作
+    * 即通过判断是否有blogId，来确定是否是新增还是编辑博客页面
+    * */
     if (blogId > 0) {
         url = '/admin/blogs/update';
         swlMessage = '修改成功';
@@ -185,6 +207,11 @@ $('#saveButton').click(function () {
         type: 'POST',//方法类型
         url: url,
         data: data,
+        /*这里的result数据是接受从服务端返回到前端的数据
+        * result其实里面的数据就是：
+        * 1.resultCode:200
+        * 2.message:添加成功
+        * */
         success: function (result) {
             if (result.resultCode == 200) {
                 //成功
@@ -199,6 +226,7 @@ $('#saveButton').click(function () {
                     confirmButtonClass: 'btn btn-success',
                     buttonsStyling: false
                 }).then(function () {
+                    /*保存成功，接着跳转到博客的主页面*/
                     window.location.href = "/admin/blogs";
                 })
             }

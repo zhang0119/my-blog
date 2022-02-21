@@ -37,10 +37,12 @@ public class BlogServiceImpl implements BlogService {
     @Autowired
     private BlogCommentMapper blogCommentMapper;
 
+    /*保存博客的service方法*/
     @Override
     @Transactional
     public String saveBlog(Blog blog) {
         BlogCategory blogCategory = categoryMapper.selectByPrimaryKey(blog.getBlogCategoryId());
+        /*博客类别的处理category*/
         if (blogCategory == null) {
             blog.setBlogCategoryId(0);
             blog.setBlogCategoryName("默认分类");
@@ -61,7 +63,13 @@ public class BlogServiceImpl implements BlogService {
             List<BlogTag> tagListForInsert = new ArrayList<>();
             //所有的tag对象，用于建立关系数据
             List<BlogTag> allTagsList = new ArrayList<>();
+            /*这里做一个遍历，将新加入的tag遍历插入到allTagsList*/
             for (int i = 0; i < tags.length; i++) {
+                /*
+                * 通过标签名来获取标签对象
+                * 如果能从数据库中查询到标签对象，就不会新增，直接放到allTagsList集合中
+                * 如果从数据库中查不到，就新增，放到tagListForInsert集合中
+                */
                 BlogTag tag = tagMapper.selectByTagName(tags[i]);
                 if (tag == null) {
                     //不存在就新增
@@ -73,22 +81,31 @@ public class BlogServiceImpl implements BlogService {
                 }
             }
             //新增标签数据并修改分类排序值
+            /*先判断新增的集合内部是否为空*/
             if (!CollectionUtils.isEmpty(tagListForInsert)) {
+                /*不为空就批量插入*/
                 tagMapper.batchInsertBlogTag(tagListForInsert);
             }
+            /*判断博客类型是否为空*/
             if (blogCategory != null) {
+                /*不为空就通过主键*/
                 categoryMapper.updateByPrimaryKeySelective(blogCategory);
             }
+
+            /*这个是博客标签关系*/
             List<BlogTagRelation> blogTagRelations = new ArrayList<>();
             //新增关系数据
             allTagsList.addAll(tagListForInsert);
             for (BlogTag tag : allTagsList) {
                 BlogTagRelation blogTagRelation = new BlogTagRelation();
+                /*这里的blog是单个博客对象*/
                 blogTagRelation.setBlogId(blog.getBlogId());
+                /*同理，tag是所有标签中的单个标签*/
                 blogTagRelation.setTagId(tag.getTagId());
                 blogTagRelations.add(blogTagRelation);
             }
             if (blogTagRelationMapper.batchInsert(blogTagRelations) > 0) {
+                /*插入数据成功*/
                 return "success";
             }
         }

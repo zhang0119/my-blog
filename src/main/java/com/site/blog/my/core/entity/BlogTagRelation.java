@@ -2,6 +2,7 @@ package com.site.blog.my.core.entity;
 
 import java.util.Date;
 
+/*这个类的主要作用是将blog表和tag表关联起来，这样可以减少使用外键*/
 public class BlogTagRelation {
     private Long relationId;
 

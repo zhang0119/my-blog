@@ -28,17 +28,24 @@
                     </div>
                     <div class="card-body">
                         <!-- 几个基础的输入框，名称、分类等输入框 -->
+                        <!--如何解决一个input 发生自动提交，那就是给form 加上 onsubmit=“return false”-->
                         <form id="blogForm" onsubmit="return false;">
 
+                            <!---下面所有的`blog`都是和编辑博客内容有关的，和新增操作无关--------------------------------------------------->
                             <div class="form-group" style="display:flex;">
-                                <!--这个隐藏域作用?-->
+                                <!--这个隐藏域作用:
+                                    blog有值，即编辑页面输出id(当然看不见)
+                                    blog没有值，用0代替
+                                -->
                                 <input type="hidden" id="blogId" name="blogId" th:value="${blog!=null and blog.blogId!=null }?${blog.blogId}: 0">
-
+                                <!--当这个页面作为编辑博客页面是显示博客标题
+                                    如果是新增博客就不显示-->
                                 <input type="text" class="form-control col-sm-6" id="blogName" name="blogName"
                                        placeholder="*请输入文章标题(必填)"
                                        th:value="${blog!=null and blog.blogTitle!=null }?${blog.blogTitle}: ''"
                                        required="true">
-                                &nbsp;&nbsp;
+                                &nbsp;&nbsp;<!--当这个页面作为编辑博客页面是显示博客标签
+                                    如果是新增博客就不显示-->
                                 <input type="text" class="form-control" id="blogTags" name="blogTags"
                                        placeholder="请输入文章标签"
                                        th:value="${blog!=null and blog.blogTags!=null }?${blog.blogTags}: ''"
@@ -59,6 +66,7 @@
                                     </th:block>
                                     <!--取反，即categories有值-->
                                     <th:block th:unless="${null == categories}">
+                                        <!--遍历所有的类型-->
                                         <th:block th:each="c : ${categories}">
                                             <option th:value="${c.categoryId}" th:text="${c.categoryName}"
                                                     th:selected="${null !=blog and null !=blog.blogCategoryId and blog.blogCategoryId==c.categoryId} ?true:false">
@@ -105,10 +113,16 @@
                             <form onsubmit="return false;">
                                 <div class="form-group">
                                     <div class="col-sm-4">
+                                        <!--这里的意思是只有新增才显示这个相机图片
+                                            而如果是编辑博客时是不显示这个相机的
+                                        -->
                                         <th:block th:if="${null == blog}">
+                                            <!--这张照片是唬人的，就是一个相机，静态图-->
                                             <img id="blogCoverImage" src="/admin/dist/img/img-upload.png"
                                                  style="height: 64px;width: 64px;">
                                         </th:block>
+                                        <!--取反操作，当blog不为空，即此时是编辑博客页面时，
+                                            显示前面选好的页面-->
                                         <th:block th:unless="${null == blog}">
                                             <img id="blogCoverImage" th:src="${blog.blogCoverImage}"
                                                  style="width:160px ;height: 120px;display:block;">
@@ -118,6 +132,7 @@
                                 <br>
                                 <div class="form-group">
                                     <div class="col-sm-4">
+
                                         <button class="btn btn-info" style="margin-bottom: 5px;" id="uploadCoverImage">
                                             <i class="fa fa-picture-o"></i>&nbsp;上传封面
                                         </button>

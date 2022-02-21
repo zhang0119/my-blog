@@ -49,6 +49,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Boolean reply(Long commentId, String replyBody) {
+        /*通过评论id查到整个评论对象*/
         BlogComment blogComment = blogCommentMapper.selectByPrimaryKey(commentId);
         //blogComment不为空且状态为已审核，则继续后续操作
         if (blogComment != null && blogComment.getCommentStatus().intValue() == 1) {

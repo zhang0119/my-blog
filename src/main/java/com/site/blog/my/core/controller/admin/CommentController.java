@@ -25,6 +25,9 @@ public class CommentController {
     @Resource
     private CommentService commentService;
 
+    /*这个方法是把所有的评论都遍历到表格里面
+    * 当新增一条评论时这个方法才会被调用
+    * */
     @GetMapping("/comments/list")
     @ResponseBody
     public Result list(@RequestParam Map<String, Object> params) {
@@ -35,6 +38,7 @@ public class CommentController {
         return ResultGenerator.genSuccessResult(commentService.getCommentsPage(pageUtil));
     }
 
+    /*这个方法是做批量审核用的*/
     @PostMapping("/comments/checkDone")
     @ResponseBody
     public Result checkDone(@RequestBody Integer[] ids) {
@@ -48,6 +52,12 @@ public class CommentController {
         }
     }
 
+    /**
+     * 处理回复评论时用的方法，发起请求的地址在comment.js里面,ajax请求，post请求方式
+     * @param commentId 携带的管理员选中评论id
+     * @param replyBody 管理员回复给访客的评论
+     * @return
+     */
     @PostMapping("/comments/reply")
     @ResponseBody
     public Result checkDone(@RequestParam("commentId") Long commentId,
@@ -56,6 +66,11 @@ public class CommentController {
             return ResultGenerator.genFailResult("参数异常！");
         }
         if (commentService.reply(commentId, replyBody)) {
+            /*评论的id和评论的内容合格后执行这个流程*/
+            /*此时返回的result对象的内容：
+                resultCode:200
+                message:success
+             */
             return ResultGenerator.genSuccessResult();
         } else {
             return ResultGenerator.genFailResult("回复失败");
@@ -75,6 +90,7 @@ public class CommentController {
         }
     }
 
+    /*去评论页面*/
     @GetMapping("/comments")
     public String list(HttpServletRequest request) {
         request.setAttribute("path", "comments");

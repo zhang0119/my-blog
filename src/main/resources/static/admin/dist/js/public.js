@@ -120,8 +120,8 @@ function getSelectedRow() {
     /*jqGrid是表格table的全局id*/
     /*先拿到table对象*/
     var grid = $("#jqGrid");
-    //这里拿到的rowKey应该是有值的
-    /*getGridParam(): 返回请求的参数信息*/
+
+    /*getGridParam("selrow")获取选中行的id*/
     var rowKey = grid.getGridParam("selrow");
     if (!rowKey) {
         //空
@@ -131,7 +131,7 @@ function getSelectedRow() {
         //非空
         return;
     }
-    /*getGridParam(): 返回请求的参数信息*/
+    /*getGridParam("selarrrow")可以多选时，返回选中行的id*/
     var selectedIDs = grid.getGridParam("selarrrow");
     if (selectedIDs.length > 1) {
         swal("只能选择一条记录", {
@@ -165,6 +165,7 @@ function getSelectedRowWithoutAlert() {
  */
 function getSelectedRows() {
     var grid = $("#jqGrid");
+    /*getGridParam("selrow")获取选中行的id*/
     var rowKey = grid.getGridParam("selrow");
     if (!rowKey) {
         swal("请选择一条记录", {
@@ -172,5 +173,6 @@ function getSelectedRows() {
         });
         return;
     }
+    /*getGridParam("selarrrow")可以多选时，返回选中行的id*/
     return grid.getGridParam("selarrrow");
 }

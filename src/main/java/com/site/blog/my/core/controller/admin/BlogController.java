@@ -8,6 +8,7 @@ import com.site.blog.my.core.util.MyBlogUtils;
 import com.site.blog.my.core.util.PageQueryUtil;
 import com.site.blog.my.core.util.Result;
 import com.site.blog.my.core.util.ResultGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,7 @@ public class BlogController {
     @Resource
     private CategoryService categoryService;
 
+    /*这个是做博客的分页处理的*/
     @GetMapping("/blogs/list")
     @ResponseBody
     public Result list(@RequestParam Map<String, Object> params) {
@@ -51,7 +53,7 @@ public class BlogController {
         return ResultGenerator.genSuccessResult(blogService.getBlogsPage(pageUtil));
     }
 
-
+    /*去blog主页面*/
     @GetMapping("/blogs")
     public String list(HttpServletRequest request) {
         request.setAttribute("path", "blogs");
@@ -78,9 +80,11 @@ public class BlogController {
         return "admin/edit";
     }
 
+    /*保存博客*/
     @PostMapping("/blogs/save")
     @ResponseBody
     public Result save(@RequestParam("blogTitle") String blogTitle,
+                       /*required=false 代表这个blogSubUrl可以为null*/
                        @RequestParam(name = "blogSubUrl", required = false) String blogSubUrl,
                        @RequestParam("blogCategoryId") Integer blogCategoryId,
                        @RequestParam("blogTags") String blogTags,
@@ -121,8 +125,19 @@ public class BlogController {
         blog.setBlogCoverImage(blogCoverImage);
         blog.setBlogStatus(blogStatus);
         blog.setEnableComment(enableComment);
+        /*
+        * 处理保存博客的service方法
+        * 通过源码分析，这个saveBlogResult的结果只有两种：
+        * "success"，另外一个是"保存失败"
+        */
         String saveBlogResult = blogService.saveBlog(blog);
+
         if ("success".equals(saveBlogResult)) {
+            /*这里实际上是返回了一个result对象
+            * result里面封装的两个属性：
+            * 1.resultCode:200
+            * 2.message:添加成功
+            * */
             return ResultGenerator.genSuccessResult("添加成功");
         } else {
             return ResultGenerator.genFailResult(saveBlogResult);
@@ -205,6 +220,7 @@ public class BlogController {
                     throw new IOException("文件夹创建失败,路径为：" + fileDirectory);
                 }
             }
+            /*将流文件序列化的文件系统中，即前面配置好的磁盘路径*/
             file.transferTo(destFile);
             request.setCharacterEncoding("utf-8");
             response.setHeader("Content-Type", "text/html");
@@ -218,11 +234,15 @@ public class BlogController {
 
     @PostMapping("/blogs/delete")
     @ResponseBody
+    //@RequestBody主要用来接收前端传递给后端的json字符串中的数据的(请求体中的数据的)
+    //最常用的请求方式就是post请求方式
     public Result delete(@RequestBody Integer[] ids) {
         if (ids.length < 1) {
+            //通过下面的代码，我们可以获得失败的参数(500,参数异常)
             return ResultGenerator.genFailResult("参数异常！");
         }
         if (blogService.deleteBatch(ids)) {
+            //这里的result携带了 result:(200,"success");
             return ResultGenerator.genSuccessResult();
         } else {
             return ResultGenerator.genFailResult("删除失败");

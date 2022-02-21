@@ -32,10 +32,12 @@ import java.util.UUID;
 @RequestMapping("/admin")
 public class UploadController {
 
+    /*ajax发起请求到这里来*/
     @PostMapping({"/upload/file"})
     @ResponseBody
     public Result upload(HttpServletRequest httpServletRequest, @RequestParam("file") MultipartFile file) throws URISyntaxException {
         String fileName = file.getOriginalFilename();
+        /*这里得到图片格式，包括. */
         String suffixName = fileName.substring(fileName.lastIndexOf("."));
         //生成文件名称通用方法
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
@@ -48,11 +50,14 @@ public class UploadController {
         File destFile = new File(Constants.FILE_UPLOAD_DIC + newFileName);
         try {
             if (!fileDirectory.exists()) {
+                //不存在
                 if (!fileDirectory.mkdir()) {
                     throw new IOException("文件夹创建失败,路径为：" + fileDirectory);
                 }
             }
+            /*将接收到的文件传输到给定的目标文件。*/
             file.transferTo(destFile);
+            /*resultSuccess*/
             Result resultSuccess = ResultGenerator.genSuccessResult();
             resultSuccess.setData(MyBlogUtils.getHost(new URI(httpServletRequest.getRequestURL() + "")) + "/upload/" + newFileName);
             return resultSuccess;

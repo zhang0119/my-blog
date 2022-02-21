@@ -8,6 +8,10 @@ import java.io.Serializable;
  * @email 2449207463@qq.com
  * @link http://13blog.site
  */
+/*这里实现序列化接口Serializable，可以将内存中闲置的session对象放入到数据库或者
+* 文件系统中，这个过程就需要序列化。当从数据库中取出session对象到内存中，就要
+* 实现反序列化
+* */
 public class Result<T> implements Serializable {
     private static final long serialVersionUID = 1L;
     private int resultCode;
